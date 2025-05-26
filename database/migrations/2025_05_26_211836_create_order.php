@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('order', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('table_occupation_id')->constrained('table_occupation')->onDelete('cascade');
+        });
+
+        Schema::create('order_item', function (Blueprint $table) {
+            $table->foreignId('order_id')->constrained('order')->onDelete('cascade')->primary();
+            $table->foreignId('dish_id')->constrained('dish')->onDelete('cascade')->primary();
+            $table->integer('quantity');
+            $table->decimal('price');
+            $table->enum('side_dish', ['witte rijst', 'nasi', 'bami goreng', 'mihoen goreng', 'chinese bami'])->default('pending');
+            $table->string('note')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('order');
+    }
+};
