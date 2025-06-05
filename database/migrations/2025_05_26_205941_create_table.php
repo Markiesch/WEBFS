@@ -17,16 +17,16 @@ return new class extends Migration {
 
         Schema::create('table_occupation', function (Blueprint $table) {
             $table->id();
-            $table->date('birthdate');
-            $table->boolean('has_deluxe_menu');
+            $table->foreignId('table_id')->constrained('table')->onDelete('cascade');
+            $table->foreignId('guest_id')->constrained('table_guest')->onDelete('cascade');
+            $table->dateTime('datetime');
             $table->timestamps();
         });
 
         Schema::create('table_guest', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('table_id')->constrained('table')->onDelete('cascade');
-            $table->foreignId('guest_id')->constrained('table_guest')->onDelete('cascade');
-            $table->dateTime('datetime');
+            $table->date('birthdate');
+            $table->boolean('has_deluxe_menu');
             $table->timestamps();
         });
     }

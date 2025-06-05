@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('category', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+        });
+
         Schema::create('dish', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained('category')->onDelete('cascade');
             $table->string('menu_number')->unique();
             $table->string('name');
             $table->decimal('price');
             $table->string('image')->nullable();
             $table->timestamps();
-        });
-
-        Schema::create('category', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
         });
     }
 

@@ -19,11 +19,12 @@ return new class extends Migration
         });
 
         Schema::create('order_item', function (Blueprint $table) {
-            $table->foreignId('order_id')->constrained('order')->onDelete('cascade')->primary();
-            $table->foreignId('dish_id')->constrained('dish')->onDelete('cascade')->primary();
+            $table->id();
+            $table->foreignId('order_id')->constrained('order')->onDelete('cascade');
+            $table->foreignId('dish_id')->constrained('dish')->onDelete('cascade');
+            $table->foreignId('side_dish_id')->nullable()->constrained('dish')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('price');
-            $table->enum('side_dish', ['witte rijst', 'nasi', 'bami goreng', 'mihoen goreng', 'chinese bami'])->default('pending');
             $table->string('note')->nullable();
         });
     }
@@ -34,5 +35,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('order');
+        Schema::dropIfExists('order_item');
     }
 };
