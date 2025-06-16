@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Category;
+use App\Models\Dish;
 use Illuminate\Database\Seeder;
 
 class DishSeeder extends Seeder
@@ -13,8 +14,10 @@ class DishSeeder extends Seeder
         $categories = [
             ['name' => 'SOEP'],
             ['name' => 'VOORGERECHTEN'],
+            ['name' => 'BAMI EN NASI GERECHTEN'],
+            ['name' => 'COMBINATIE GERECHTEN (met witte rijst)'],
             ['name' => 'MIHOEN GERECHTEN'],
-            ['name' => 'CHINESE BAMIGERECHTEN'],
+            ['name' => 'CHINESE BAMI GERECHTEN'],
             ['name' => 'INDISCHE GERECHTEN'],
             ['name' => 'EIERGERECHTEN (met witte rijst)'],
             ['name' => 'GROENTEN GERECHTEN (met witte rijst)'],
@@ -23,36 +26,35 @@ class DishSeeder extends Seeder
             ['name' => 'GARNALEN GERECHTEN (met witte rijst)'],
         ];
 
-        DB::table('category')->insert($categories);
+        Category::insert($categories);
 
         // Dishes
         $dishes = [
+            // SOEP
             ['category_id' => 1, 'menu_number' => '1', 'name' => 'Soep Ling Fa', 'price' => 3.80, 'image' => null],
             ['category_id' => 1, 'menu_number' => '2', 'name' => 'Kippensoep', 'price' => 2.90, 'image' => null],
             ['category_id' => 1, 'menu_number' => '3', 'name' => 'Tomaten soep', 'price' => 2.90, 'image' => null],
-            ['category_id' => 1, 'menu_number' => '4', 'name' => 'Haanewijnensoep', 'price' => 3.10, 'image' => null],
+            ['category_id' => 1, 'menu_number' => '4', 'name' => 'Haaienvinnensoep', 'price' => 3.10, 'image' => null],
             ['category_id' => 1, 'menu_number' => '5', 'name' => 'Champignonsoep', 'price' => 3.30, 'image' => null],
-            ['category_id' => 1, 'menu_number' => '6', 'name' => 'Pekings oep', 'price' => 3.80, 'image' => null],
+            ['category_id' => 1, 'menu_number' => '6', 'name' => 'Pekingsoep', 'price' => 3.80, 'image' => null],
             ['category_id' => 1, 'menu_number' => '7', 'name' => 'Wan Tan Soep', 'price' => 4.30, 'image' => null],
             ['category_id' => 1, 'menu_number' => '8', 'name' => 'Chinese Champignonsoep', 'price' => 4.10, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '10', 'name' => 'Loempia Ling Fa (met ajar ananas en pindasaus)', 'price' => 6.20, 'image' => null],
+
+            // VOORGERECHTEN
+            ['category_id' => 2, 'menu_number' => '10', 'name' => 'Loempia Ling Fa (met atjar, ananas en pindasaus)', 'price' => 6.20, 'image' => null],
             ['category_id' => 2, 'menu_number' => '11', 'name' => 'Loempia Compleet (met gemoord rundvlees en pikante saus)', 'price' => 6.20, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '12', 'name' => 'Loempia met kip', 'price' => 3.80, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '12', 'name' => 'Loempia met kip', 'price' => 3.90, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '13', 'name' => 'Loempia', 'price' => 3.80, 'image' => null],
             ['category_id' => 2, 'menu_number' => '14', 'name' => 'Chinese mini loempia (4 st.)', 'price' => 4.90, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '14A', 'name' => 'Vegetarish mini loempia (12 st.)', 'price' => 4.90, 'image' => null],
             ['category_id' => 2, 'menu_number' => '15', 'name' => 'Kroepoek', 'price' => 2.50, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '16', 'name' => 'Pangsit Goreng (6st.)', 'price' => 3.90, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '17', 'name' => 'Chinese Dim Sum', 'price' => 5.40, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '15A', 'name' => 'Casave Kroepoek', 'price' => 2.70, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '16', 'name' => 'Pangsit Goreng (7st.)', 'price' => 3.90, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '17', 'name' => 'Pisang Goreng (5st.)', 'price' => 3.40, 'image' => null],
+            ['category_id' => 2, 'menu_number' => '18', 'name' => 'Chinese Dim Sum', 'price' => 5.40, 'image' => null],
             ['category_id' => 2, 'menu_number' => '20', 'name' => 'Saté Ajam (4st.)', 'price' => 5.40, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '21', 'name' => 'Fong Mei Hai (krokant gepancerd garnalen, 4st.)', 'price' => 8.10, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '23', 'name' => 'Tsa Siu Mai (gehakken varkensvlees, 4st.)', 'price' => 3.50, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '24', 'name' => 'Ajar', 'price' => 3.00, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '25', 'name' => 'Witte rijst', 'price' => 3.00, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '26', 'name' => 'Groente pindasaus', 'price' => 3.90, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '27', 'name' => 'Kleine pindasaus', 'price' => 2.30, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '28', 'name' => 'Kippensoep', 'price' => 2.30, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '29', 'name' => 'Halve kip', 'price' => 6.00, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '29G', 'name' => 'Frikandel', 'price' => 1.40, 'image' => null],
-            ['category_id' => 2, 'menu_number' => '180H', 'name' => 'Kleine Sambal', 'price' => 2.50, 'image' => null],
+
+            // BAMI EN NASI GERECHTEN
             ['category_id' => 3, 'menu_number' => '30', 'name' => 'Bami of Nasi Gereghtten Ling Fa (foe Yong Hai, Babi Panggang saté en kippensoepje)', 'price' => 14.30, 'image' => null],
             ['category_id' => 3, 'menu_number' => '31', 'name' => 'Bami of Nasi Goreng met ei', 'price' => 5.00, 'image' => null],
             ['category_id' => 3, 'menu_number' => '32', 'name' => 'Bami of Nasi Goreng speciaal', 'price' => 8.50, 'image' => null],
@@ -63,6 +65,8 @@ class DishSeeder extends Seeder
             ['category_id' => 3, 'menu_number' => '37', 'name' => 'Bami of Nasi met varkensvlees', 'price' => 9.30, 'image' => null],
             ['category_id' => 3, 'menu_number' => '38', 'name' => 'Bami of Nasi met garnalen', 'price' => 14.30, 'image' => null],
             ['category_id' => 3, 'menu_number' => '39', 'name' => 'Bami of Nasi met ossenhaas', 'price' => 15.30, 'image' => null],
+
+            // COMBINATIE GERECHTEN (met witte rijst)
             ['category_id' => 4, 'menu_number' => '40', 'name' => 'Babi Panggang Foe Yong Hai en saté', 'price' => 15.80, 'image' => null],
             ['category_id' => 4, 'menu_number' => '41', 'name' => 'Babi Panggang Tap Tjoy en saté', 'price' => 15.80, 'image' => null],
             ['category_id' => 4, 'menu_number' => '42', 'name' => 'Babi Panggang Koe Loe Yuk en saté', 'price' => 15.80, 'image' => null],
@@ -71,6 +75,8 @@ class DishSeeder extends Seeder
             ['category_id' => 4, 'menu_number' => '45', 'name' => 'Koe Loe Yuk, Tap Tjoy en saté', 'price' => 15.80, 'image' => null],
             ['category_id' => 4, 'menu_number' => '46', 'name' => 'Foe Yong Hai, Tap Tjoy en saté', 'price' => 15.80, 'image' => null],
             ['category_id' => 4, 'menu_number' => '47', 'name' => 'Foe Yong Hai, Kip Kerrie en saté', 'price' => 16.50, 'image' => null],
+
+            // MIHOEN GERECHTEN
             ['category_id' => 5, 'menu_number' => '50', 'name' => 'Mihoen Ling Fa Panggang saté en kippensoepje)', 'price' => 16.40, 'image' => null],
             ['category_id' => 5, 'menu_number' => '51', 'name' => 'Mihoen met varkensvlees', 'price' => 9.30, 'image' => null],
             ['category_id' => 5, 'menu_number' => '52', 'name' => 'Mihoen met kipfilet', 'price' => 10.40, 'image' => null],
@@ -78,17 +84,23 @@ class DishSeeder extends Seeder
             ['category_id' => 5, 'menu_number' => '54', 'name' => 'Mihoen met garnalen', 'price' => 15.30, 'image' => null],
             ['category_id' => 5, 'menu_number' => '55', 'name' => 'Mihoen Singapore-style', 'price' => 11.90, 'image' => null],
             ['category_id' => 5, 'menu_number' => '56', 'name' => 'Mihoen met Cha Siewvlees en kerrie poeder', 'price' => 11.20, 'image' => null],
+
+            // CHINESE BAMI GERECHTEN
             ['category_id' => 6, 'menu_number' => '57', 'name' => 'Chinese Bami Ling Fa', 'price' => 16.40, 'image' => null],
             ['category_id' => 6, 'menu_number' => '58', 'name' => 'Chinese bami met varkensvlees', 'price' => 10.10, 'image' => null],
             ['category_id' => 6, 'menu_number' => '58C', 'name' => 'Chinese Bami met kipfilet', 'price' => 11.20, 'image' => null],
             ['category_id' => 6, 'menu_number' => '58D', 'name' => 'Chinese Bami met garnalen', 'price' => 15.80, 'image' => null],
             ['category_id' => 6, 'menu_number' => '58E', 'name' => 'Chinese Bami met ossenhaas', 'price' => 17.40, 'image' => null],
+
+            // INDISCHE GERECHTEN
             ['category_id' => 7, 'menu_number' => 'M1', 'name' => 'Bami of Nasi Rames Ling Fa', 'price' => 15.30, 'image' => null],
             ['category_id' => 7, 'menu_number' => 'M2', 'name' => 'Bami of Nasi Rames', 'price' => 8.80, 'image' => null],
             ['category_id' => 7, 'menu_number' => 'M3', 'name' => 'Bami of Nasi Rames speciaal', 'price' => 10.80, 'image' => null],
             ['category_id' => 7, 'menu_number' => 'M4', 'name' => 'Gado Gado (met witte rijst)', 'price' => 7.60, 'image' => null],
             ['category_id' => 7, 'menu_number' => 'M5', 'name' => 'Daging Smoor (met witte rijst)', 'price' => 13.30, 'image' => null],
             ['category_id' => 7, 'menu_number' => 'M6', 'name' => 'Daging Roedjak (met witte rijst)', 'price' => 13.30, 'image' => null],
+
+            // EIERGERECHTEN (met witte rijst)
             ['category_id' => 8, 'menu_number' => '59', 'name' => 'Foe Yong Hai Ling Fa', 'price' => 16.40, 'image' => null],
             ['category_id' => 8, 'menu_number' => '60', 'name' => 'Foe Yong Hai met varkensvlees', 'price' => 8.80, 'image' => null],
             ['category_id' => 8, 'menu_number' => '61', 'name' => 'Foe Yong Hai met kipfilet', 'price' => 9.20, 'image' => null],
@@ -96,10 +108,14 @@ class DishSeeder extends Seeder
             ['category_id' => 8, 'menu_number' => '63', 'name' => 'Foe Yong Hai met crab', 'price' => 15.30, 'image' => null],
             ['category_id' => 8, 'menu_number' => '63A', 'name' => 'Foe Yong Hai met Cha Siew Vlees', 'price' => 11.20, 'image' => null],
             ['category_id' => 8, 'menu_number' => '63B', 'name' => 'Foe Yong Hai met ossenhaas', 'price' => 16.40, 'image' => null],
+
+            // GROENTEN GERECHTEN (met witte rijst)
             ['category_id' => 9, 'menu_number' => '64', 'name' => 'Tap Tjoy Fa', 'price' => 16.40, 'image' => null],
             ['category_id' => 9, 'menu_number' => '65', 'name' => 'Tap Tjoy met kipfilet', 'price' => 8.80, 'image' => null],
             ['category_id' => 9, 'menu_number' => '66', 'name' => 'Tap Tjoy met garnalen', 'price' => 15.30, 'image' => null],
             ['category_id' => 9, 'menu_number' => '67', 'name' => 'Tap Tjoy met ossenhaas', 'price' => 16.40, 'image' => null],
+
+            // VLEES GERECHTEN (met witte rijst)
             ['category_id' => 10, 'menu_number' => '70', 'name' => 'Babi Panggang in ketjap saus', 'price' => 12.20, 'image' => null],
             ['category_id' => 10, 'menu_number' => '71', 'name' => 'Babi Panggang in zoetzure saus', 'price' => 12.20, 'image' => null],
             ['category_id' => 10, 'menu_number' => '72', 'name' => 'Cha Siew (rood geroosterde varkensvlees)', 'price' => 13.30, 'image' => null],
@@ -112,6 +128,8 @@ class DishSeeder extends Seeder
             ['category_id' => 10, 'menu_number' => '79', 'name' => 'Varkenshaas met zwarte bonensaus', 'price' => 13.30, 'image' => null],
             ['category_id' => 10, 'menu_number' => '79A', 'name' => 'Varkenshaas met verse ananas in zoetzure saus', 'price' => 13.30, 'image' => null],
             ['category_id' => 10, 'menu_number' => '79B', 'name' => 'Varkenshaas met licht zoet pikante kruiden saus', 'price' => 13.30, 'image' => null],
+
+            // KIPGERECHTEN (met witte rijst)
             ['category_id' => 11, 'menu_number' => '80', 'name' => 'Ajam Panggang in ketjap saus', 'price' => 13.00, 'image' => null],
             ['category_id' => 11, 'menu_number' => '81', 'name' => 'Ajam Panggang in zoetzure saus', 'price' => 13.00, 'image' => null],
             ['category_id' => 11, 'menu_number' => '82', 'name' => 'Kipfilet met kerrie saus', 'price' => 13.00, 'image' => null],
@@ -127,6 +145,8 @@ class DishSeeder extends Seeder
             ['category_id' => 11, 'menu_number' => '93', 'name' => 'Yak Koe Kai (kipfilet met lychee in zoetzure saus)', 'price' => 13.30, 'image' => null],
             ['category_id' => 11, 'menu_number' => '94', 'name' => 'Yak Koe Kai (kipfilet met pittige kruiden saus)', 'price' => 13.30, 'image' => null],
             ['category_id' => 11, 'menu_number' => '95', 'name' => 'Yak Koe Kai (kipfilet met cashewnoten in pittige saus)', 'price' => 13.80, 'image' => null],
+
+            // GARNALEN GERECHTEN (met witte rijst)
             ['category_id' => 12, 'menu_number' => '96', 'name' => 'Garnalen met champignons in knoflooksaus', 'price' => 15.90, 'image' => null],
             ['category_id' => 12, 'menu_number' => '97', 'name' => 'Garnalen met ketjap saus', 'price' => 15.90, 'image' => null],
             ['category_id' => 12, 'menu_number' => '98', 'name' => 'Garnalen met tomatensaus', 'price' => 15.90, 'image' => null],
@@ -143,6 +163,6 @@ class DishSeeder extends Seeder
             ['category_id' => 12, 'menu_number' => '109', 'name' => 'Yak Koe Haa (garnalen met pittige kruiden saus)', 'price' => 16.10, 'image' => null],
         ];
 
-        DB::table('dish')->insert($dishes);
+        Dish::insert($dishes);
     }
 }
