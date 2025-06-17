@@ -18,11 +18,12 @@ return new class extends Migration
 
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->string('menu_number')->unique();
             $table->string('name');
             $table->decimal('price');
+            $table->string('menu_number')->unique();
+            $table->string('description')->nullable();
             $table->string('image')->nullable();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
