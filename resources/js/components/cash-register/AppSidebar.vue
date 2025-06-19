@@ -15,11 +15,6 @@ const mainNavItems: NavItem[] = [
         icon: ConciergeBell,
     },
     {
-        title: 'Gerechten',
-        href: '/kassa/dishes',
-        icon: SquareMenu,
-    },
-    {
         title: 'Verkoop overzicht',
         href: '/kassa/orders',
         icon: ReceiptJapaneseYen,
