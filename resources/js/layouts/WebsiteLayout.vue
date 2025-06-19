@@ -39,13 +39,13 @@ body {
 <style scoped>
 .main-container {
     background-color: red;
-    margin: 1rem 3rem;
+    margin: 1rem min(3rem, 4vw);
 }
 
 main {
     position: relative;
     min-height: calc(100vh - 65px - 2rem);
-    padding: 100px;
+    padding: min(100px, 20vw);
 }
 
 .bg-pattern {

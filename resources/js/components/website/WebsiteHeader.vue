@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div class="mb-10 flex items-center justify-between gap-2">
-        <img src="/images/dragon-small.png" alt="Dragon Logo" class="h-52 w-52" />
+        <img src="/images/dragon-small.png" alt="Dragon Logo" class="!hidden md:h-16 md:w-16 lg:h-52 lg:w-52" />
 
         <div>
             <h1 class="text-center !text-5xl !font-bold text-yellow-300">
@@ -12,7 +12,7 @@ import { Link } from '@inertiajs/vue3';
                 De Gouden Draak
             </h1>
 
-            <div class="mt-4 flex justify-center gap-1">
+            <div class="mt-4 flex flex-wrap justify-center gap-1">
                 <Link
                     :href="route('web.menu')"
                     class="min-w-36 bg-linear-to-b from-sky-200 via-blue-500 to-blue-700 py-[3px] text-center !text-white"
@@ -34,6 +34,6 @@ import { Link } from '@inertiajs/vue3';
             </div>
         </div>
 
-        <img src="/images/dragon-small-flipped.png" alt="Dragon Logo Flipped" class="h-52 w-52" />
+        <img src="/images/dragon-small-flipped.png" alt="Dragon Logo Flipped" class="!hidden md:h-16 md:w-16 lg:h-52 lg:w-52" />
     </div>
 </template>
