@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\CashRegister;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use App\Models\Dish;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Dish;
 
 class DashboardController extends Controller
 {
