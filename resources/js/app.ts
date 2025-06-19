@@ -1,6 +1,8 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import { Marquee } from '@selemondev/vue3-marquee';
+import '@selemondev/vue3-marquee/dist/style.css';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
@@ -10,6 +12,7 @@ import { ZiggyVue } from 'ziggy-js';
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
+
         [key: string]: string | boolean | undefined;
     }
 
@@ -28,6 +31,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .component('Marquee', Marquee)
             .mount(el);
     },
     progress: {
