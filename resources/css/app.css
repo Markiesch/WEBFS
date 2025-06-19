@@ -16,7 +16,8 @@
 }
 
 @theme inline {
-    --font-sans: 'Times New Roman', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-cty: 'chinese_takeawayregular';
 
     --radius-lg: var(--radius);

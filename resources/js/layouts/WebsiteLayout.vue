@@ -3,6 +3,7 @@ import Footer from '@/components/website/Footer.vue';
 import Header from '@/components/website/Header.vue';
 import TopBar from '@/components/website/TopBar.vue';
 import { Head } from '@inertiajs/vue3';
+import '@selemondev/vue3-marquee/dist/style.css';
 
 interface Props {
     title?: string;
@@ -36,6 +37,7 @@ withDefaults(defineProps<Props>(), {
 <style>
 body {
     background-color: darkred;
+    font-family: 'Times New Roman', ui-sans-serif, system-ui, sans-serif;
 }
 </style>
 
