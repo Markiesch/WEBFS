@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import InputError from '@/components/InputError.vue';
 import WebsiteLayout from '@/layouts/WebsiteLayout.vue';
 import { Dish } from '@/types';
+import { useForm } from '@inertiajs/vue3';
 import { Heart } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
@@ -30,22 +32,44 @@ function addDishToFavorites(dishId: number) {
     localStorage.setItem(storageKey, JSON.stringify(favorites.value));
 }
 
+const form = useForm({
+    filter: 'all',
+    // TODO : the filters does not work yet, the favorites are not sent to the backend
+});
+
+const submit = () => {
+    form.post(route('web.menu-filtered'), {
+        preserveScroll: true,
+        preserveState: true,
+    });
+};
+
 onMounted(loadFavorites);
 </script>
 
 <template>
     <WebsiteLayout title="Menukaart">
+        <div class="text-end">
+            <form @submit.prevent="submit">
+                <select v-model="form.filter" name="filter" class="bg-linear-to-b from-sky-200 via-blue-500 to-blue-700" @change="submit">
+                    <option value="all">Alle categorieën</option>
+                    <option value="favorites_asc">Favorieten (nummer oplopend)</option>
+                    <option value="favorites_desc">Favorieten (nummer aflopend)</option>
+                    <option value="favorites_name_asc">Favorieten (naam oplopend)</option>
+                    <option value="favorites_name_desc">Favorieten (naam aflopend)</option>
+                </select>
+                <input type="hidden" name="favorites" :value="JSON.stringify(favorites)" />
+                <InputError class="mt-2" :message="form.errors.filter" />
+            </form>
+        </div>
         <section class="relative overflow-hidden !border !border-black bg-[#fefebe] p-4">
             <div v-if="dishGroup && Object.keys(dishGroup).length > 0" class="cols">
                 <div v-for="[category, dishes] in Object.entries(dishGroup)" :key="category" class="mb-4">
                     <h2 class="!font-bold">{{ category }}</h2>
                     <div v-for="dish in dishes" :key="dish.id">
                         <p class="!mt-1 !mb-0 flex w-full items-center justify-between">
-                            <button
-                                @click="addDishToFavorites(dish.id)"
-                                :class="['!mr-2 !p-0 hover:!text-gray-500', favorites.includes(dish.id) ? '!text-red-500' : '!text-black']"
-                            >
-                                <Heart class="h-6 w-6" />
+                            <button @click="addDishToFavorites(dish.id)" class="!mr-2 !p-0 hover:!text-gray-500">
+                                <Heart :class="['h-6 w-6', favorites.includes(dish.id) ? '!fill-red-500' : '']" />
                             </button>
 
                             <span>
