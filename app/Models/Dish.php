@@ -14,7 +14,6 @@ class Dish extends Model
         'price',
         'menu_number',
         'description',
-        'image',
     ];
 
     public function category()
