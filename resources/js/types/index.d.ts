@@ -44,4 +44,20 @@ export interface NewsPost {
     updated_at: string;
 }
 
+export interface Category {
+    id: number;
+    name: string;
+}
+
+export interface Dish {
+    id: number;
+    name: string;
+    price: number;
+    menu_number: string;
+    description: string;
+    category: Category;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
