@@ -5,19 +5,24 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
-import AppLogo from './AppLogo.vue';
+import { ConciergeBell, ReceiptJapaneseYen, SquareMenu } from 'lucide-vue-next';
+import AppLogo from '../AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
+        href: '/kassa/dashboard',
+        icon: ConciergeBell,
     },
     {
-        title: 'Kassa',
-        href: '/kassa',
-        icon: LayoutGrid,
+        title: 'Gerechten',
+        href: '/kassa/dishes',
+        icon: SquareMenu,
+    },
+    {
+        title: 'Verkoop overzicht',
+        href: '/kassa/orders',
+        icon: ReceiptJapaneseYen,
     },
 ];
 
