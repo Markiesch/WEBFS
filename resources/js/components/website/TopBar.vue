@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-between gap-4 pt-2 md:flex-row md:px-[100px]">
+    <div class="flex flex-col items-center justify-between gap-4 pt-2 xl:flex-row xl:px-[100px]">
         <Logo />
 
         <div class="max-w-full flex-1 overflow-hidden">
@@ -15,6 +15,6 @@ import { Link } from '@inertiajs/vue3';
             </Marquee>
         </div>
 
-        <Logo class="max-md:!hidden" />
+        <Logo class="max-xl:!hidden" />
     </div>
 </template>

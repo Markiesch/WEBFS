@@ -22,7 +22,7 @@ withDefaults(defineProps<Props>(), {
         <TopBar />
 
         <main>
-            <div class="bg-pattern"></div>
+            <div class="bg-pattern max-md:hidden"></div>
             <WebsiteHeader />
 
             <slot />
@@ -86,5 +86,11 @@ main {
         bottom left,
         bottom right;
     background-size: 100px, 100px, 100px, 100px;
+}
+
+@media screen and (max-width: 765px) {
+    main {
+        padding: 1em;
+    }
 }
 </style>
