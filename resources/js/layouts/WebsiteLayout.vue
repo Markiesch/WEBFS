@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import Footer from '@/components/website/Footer.vue';
+import Header from '@/components/website/Header.vue';
 import TopBar from '@/components/website/TopBar.vue';
-import WebsiteHeader from '@/components/website/WebsiteHeader.vue';
 import { Head } from '@inertiajs/vue3';
 
 interface Props {
@@ -23,9 +24,11 @@ withDefaults(defineProps<Props>(), {
 
         <main>
             <div class="bg-pattern max-md:hidden"></div>
-            <WebsiteHeader />
+            <Header />
 
             <slot />
+
+            <Footer />
         </main>
     </div>
 </template>

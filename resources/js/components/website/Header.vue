@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div class="mb-10 flex items-center justify-between gap-2">
-        <img src="/images/dragon-small.png" alt="Dragon Logo" class="max-md:!hidden md:h-16 md:w-16 lg:h-52 lg:w-52" />
+        <img src="/images/dragon-small.png" alt="Dragon Logo" class="max-md:!hidden md:h-16 md:w-16 lg:h-28 lg:w-28 xl:h-52 xl:w-52" />
 
         <div>
             <h1 class="text-center !text-5xl !font-bold text-yellow-300">
@@ -34,6 +34,10 @@ import { Link } from '@inertiajs/vue3';
             </div>
         </div>
 
-        <img src="/images/dragon-small-flipped.png" alt="Dragon Logo Flipped" class="max-md:!hidden md:h-16 md:w-16 lg:h-52 lg:w-52" />
+        <img
+            src="/images/dragon-small-flipped.png"
+            alt="Dragon Logo Flipped"
+            class="max-md:!hidden md:h-16 md:w-16 lg:h-28 lg:w-28 xl:h-52 xl:w-52"
+        />
     </div>
 </template>

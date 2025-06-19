@@ -5,7 +5,9 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <div class="flex flex-col items-center justify-between gap-4 pt-2 xl:flex-row xl:px-[100px]">
-        <Logo />
+        <Link :href="route('web.home')">
+            <Logo />
+        </Link>
 
         <div class="max-w-full flex-1 overflow-hidden">
             <Marquee class="[--duration:10s]" :fade="true">
