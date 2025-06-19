@@ -8,7 +8,7 @@ defineProps<{ dishGroup: Record<string, Dish[]> }>();
 <template>
     <WebsiteLayout title="Menukaart">
         <section class="relative overflow-hidden !border !border-black bg-[#fefebe] p-4">
-            <div v-if="dishGroup && Object.keys(dishGroup).length > 0" style="column-count: 2; column-gap: 2em">
+            <div v-if="dishGroup && Object.keys(dishGroup).length > 0" class="cols">
                 <div v-for="[category, dishes] in Object.entries(dishGroup)" :key="category" class="mb-4">
                     <h2 class="!font-bold">{{ category }}</h2>
                     <div v-for="dish in dishes" :key="dish.id">
@@ -30,4 +30,15 @@ defineProps<{ dishGroup: Record<string, Dish[]> }>();
     </WebsiteLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.cols {
+    column-count: 2;
+    column-gap: 2em;
+}
+
+@media screen and (max-width: 1280px) {
+    .cols {
+        column-count: 1;
+    }
+}
+</style>
