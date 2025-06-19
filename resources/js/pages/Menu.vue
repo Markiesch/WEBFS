@@ -1,8 +1,36 @@
 <script setup lang="ts">
 import WebsiteLayout from '@/layouts/WebsiteLayout.vue';
 import { Dish } from '@/types';
+import { Heart } from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
 
 defineProps<{ dishGroup: Record<string, Dish[]> }>();
+
+const storageKey = 'Dishes';
+const favorites = ref<number[]>([]);
+
+function loadFavorites() {
+    const stored = localStorage.getItem(storageKey);
+    try {
+        if (stored != null) {
+            favorites.value = JSON.parse(stored) ?? [];
+        }
+    } catch {
+        favorites.value = [];
+    }
+}
+
+function addDishToFavorites(dishId: number) {
+    const index = favorites.value.indexOf(dishId);
+    if (index === -1) {
+        favorites.value.push(dishId);
+    } else {
+        favorites.value.splice(index, 1);
+    }
+    localStorage.setItem(storageKey, JSON.stringify(favorites.value));
+}
+
+onMounted(loadFavorites);
 </script>
 
 <template>
@@ -13,6 +41,13 @@ defineProps<{ dishGroup: Record<string, Dish[]> }>();
                     <h2 class="!font-bold">{{ category }}</h2>
                     <div v-for="dish in dishes" :key="dish.id">
                         <p class="!mt-1 !mb-0 flex w-full items-center justify-between">
+                            <button
+                                @click="addDishToFavorites(dish.id)"
+                                :class="['!mr-2 !p-0 hover:!text-gray-500', favorites.includes(dish.id) ? '!text-red-500' : '!text-black']"
+                            >
+                                <Heart class="h-6 w-6" />
+                            </button>
+
                             <span>
                                 <span v-html="dish.menu_number + '. ' + dish.name"></span>
                                 &nbsp;
