@@ -10,7 +10,6 @@ Route::name('web.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/menukaart', [MenuController::class, 'index'])->name('menu');
-    Route::post('/menukaart', [MenuController::class, 'indexFiltered'])->name('menu-filtered');
 
     Route::get('/nieuws', [NewsController::class, 'index'])->name('news');
 
