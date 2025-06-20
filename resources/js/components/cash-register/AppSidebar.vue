@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { ConciergeBell, Martini, ReceiptEuro, ReceiptJapaneseYen, Users, Utensils } from 'lucide-vue-next';
+import { ConciergeBell, Martini, ReceiptJapaneseYen, Users, Utensils } from 'lucide-vue-next';
 import AppLogo from '../AppLogo.vue';
 
 const mainNavItems: { title: string; items: NavItem[] }[] = [
@@ -31,11 +31,6 @@ const mainNavItems: { title: string; items: NavItem[] }[] = [
                 title: 'Bezoekers registreren',
                 href: '/restaurant/visitors',
                 icon: Users,
-            },
-            {
-                title: 'Tafels afrekenen',
-                href: '/restaurant/tables',
-                icon: ReceiptEuro,
             },
         ],
     },

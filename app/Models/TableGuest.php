@@ -15,7 +15,7 @@ class TableGuest extends Model
         'has_deluxe_menu',
     ];
 
-    public function tableOccupation(): BelongsTo
+    public function occupation(): BelongsTo
     {
         return $this->belongsTo(TableOccupation::class);
     }

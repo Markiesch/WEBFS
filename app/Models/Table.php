@@ -10,7 +10,7 @@ class Table extends Model
 {
     use HasFactory;
 
-    public function tableOccupations(): HasMany
+    public function occupations(): HasMany
     {
         return $this->hasMany(TableOccupation::class);
     }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TableOccupation extends Model
 {
@@ -13,6 +13,8 @@ class TableOccupation extends Model
 
     protected $fillable = [
         'datetime',
+        'table_id',
+        'guest_id',
     ];
 
     public function table(): BelongsTo
@@ -20,8 +22,8 @@ class TableOccupation extends Model
         return $this->belongsTo(Table::class);
     }
 
-    public function guests(): HasMany
+    public function guest(): HasOne
     {
-        return $this->hasMany(TableGuest::class);
+        return $this->hasOne(TableGuest::class);
     }
 }
