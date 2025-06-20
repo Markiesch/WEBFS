@@ -6,64 +6,57 @@ import { useForm } from '@inertiajs/vue3';
 import { Heart } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue';
 
-const props = defineProps<{
-    dishGroup: Record<string, Dish[]>;
-}>();
+const props = defineProps<{ dishGroup: Record<string, Dish[]> }>();
 
-const storageKey = 'Dishes';
+const STORAGE_KEY = 'Dishes';
 const favorites = ref<number[]>([]);
 
+const form = useForm({ filter: 'all' });
+
+// Load favorites from localStorage
 function loadFavorites() {
-    const stored = localStorage.getItem(storageKey);
     try {
-        if (stored != null) {
-            favorites.value = JSON.parse(stored) ?? [];
-        }
+        const stored = localStorage.getItem(STORAGE_KEY);
+        favorites.value = stored ? JSON.parse(stored) : [];
     } catch {
         favorites.value = [];
     }
 }
 
-function addDishToFavorites(dishId: number) {
+// Toggle favorite state
+function toggleFavorite(dishId: number) {
     const index = favorites.value.indexOf(dishId);
     if (index === -1) {
         favorites.value.push(dishId);
     } else {
         favorites.value.splice(index, 1);
     }
-    localStorage.setItem(storageKey, JSON.stringify(favorites.value));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites.value));
 }
 
+// Helper to get dish by ID
 function getDishById(id: number): Dish | undefined {
-    for (const dishes of Object.values(props.dishGroup)) {
-        const found = dishes.find((dish) => dish.id === id);
-        if (found) return found;
-    }
-    return undefined;
+    return Object.values(props.dishGroup)
+        .flat()
+        .find((dish) => dish.id === id);
 }
 
-const form = useForm({
-    filter: 'all',
-});
-
+// Computed: Filtered & sorted favorite dishes
 const favoriteDishes = computed(() => {
-    let dishes = favorites.value.map((id) => getDishById(id)).filter((dish): dish is Dish => !!dish);
+    const list = favorites.value.map((id) => getDishById(id)).filter((dish): dish is Dish => !!dish);
 
     switch (form.filter) {
         case 'favorites_asc':
-            dishes = dishes.slice().sort((a, b) => a.id - b.id);
-            break;
+            return [...list].sort((a, b) => a.id - b.id);
         case 'favorites_desc':
-            dishes = dishes.slice().sort((a, b) => b.id - a.id);
-            break;
+            return [...list].sort((a, b) => b.id - a.id);
         case 'favorites_name_asc':
-            dishes = dishes.slice().sort((a, b) => a.name.localeCompare(b.name));
-            break;
+            return [...list].sort((a, b) => a.name.localeCompare(b.name));
         case 'favorites_name_desc':
-            dishes = dishes.slice().sort((a, b) => b.name.localeCompare(a.name));
-            break;
+            return [...list].sort((a, b) => b.name.localeCompare(a.name));
+        default:
+            return list;
     }
-    return dishes;
 });
 
 onMounted(loadFavorites);
@@ -84,11 +77,12 @@ onMounted(loadFavorites);
             </form>
         </div>
 
+        <!-- Favorites -->
         <section class="mb-6 !border !border-black bg-[#fefebe] p-4" v-if="favorites.length > 0 && form.filter != 'all'">
             <h2 class="!font-bold">FAVORIETEN</h2>
             <div v-for="dish in favoriteDishes" :key="dish.id">
                 <p class="!mt-1 !mb-0 flex w-full items-center justify-between">
-                    <button @click="addDishToFavorites(dish.id)" class="!mr-2 !p-0 hover:!text-gray-500">
+                    <button @click="toggleFavorite(dish.id)" class="!mr-2 !p-0 hover:!text-gray-500">
                         <Heart :class="['h-6 w-6', favorites.includes(dish.id) ? '!fill-red-500' : '']" />
                     </button>
                     <span>
@@ -102,13 +96,14 @@ onMounted(loadFavorites);
             </div>
         </section>
 
+        <!-- All Dishes -->
         <section class="!border !border-black bg-[#fefebe] p-4">
             <div v-if="dishGroup && Object.keys(dishGroup).length > 0" class="cols">
                 <div v-for="[category, dishes] in Object.entries(dishGroup)" :key="category" class="mb-4">
                     <h2 class="!font-bold">{{ category }}</h2>
                     <div v-for="dish in dishes" :key="dish.id">
                         <p class="!mt-1 !mb-0 flex w-full items-center justify-between">
-                            <button @click="addDishToFavorites(dish.id)" class="!mr-2 !p-0 hover:!text-gray-500">
+                            <button @click="toggleFavorite(dish.id)" class="!mr-2 !p-0 hover:!text-gray-500">
                                 <Heart :class="['h-6 w-6', favorites.includes(dish.id) ? '!fill-red-500' : '']" />
                             </button>
 
