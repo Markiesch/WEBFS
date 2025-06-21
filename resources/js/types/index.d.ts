@@ -60,4 +60,14 @@ export interface Dish {
     updated_at: string;
 }
 
+export interface Table {
+    id: number;
+}
+
+export interface TableGuest {
+    id: number;
+    birthdate: string;
+    has_deluxe_menu: boolean;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
