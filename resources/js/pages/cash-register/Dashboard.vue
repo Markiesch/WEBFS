@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, Dish } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { MinusIcon, PlusIcon } from 'lucide-vue-next';
 import { computed, defineProps, ref } from 'vue';
-import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,7 +37,7 @@ const addDishToSelection = (dish: Dish) => {
 const filter = ref({
     text: '',
     category: '',
-})
+});
 
 const subtractDishFromSelection = (dish: Dish) => {
     const selectionIndex = selectedDishes.value.findIndex((selection) => selection.dish.id === dish.id);
@@ -75,6 +67,24 @@ const formatPrice = (price: number) => {
 
 const allCategories = Object.keys(props.dishGroup);
 
+const filteredDishes = computed(() => {
+    return Object.entries(props.dishGroup).reduce(
+        (acc, [category, dishes]) => {
+            if (filter.value.category && category !== filter.value.category) {
+                return acc;
+            }
+
+            const textFilter = filter.value.text.toLowerCase().trim();
+
+            const filteredDishes = dishes.filter((dish) => (dish.menu_number + dish.name).toLowerCase().includes(textFilter));
+            if (filteredDishes.length > 0) {
+                acc[category] = filteredDishes;
+            }
+            return acc;
+        },
+        {} as Record<string, Dish[]>,
+    );
+});
 </script>
 
 <template>
@@ -84,25 +94,27 @@ const allCategories = Object.keys(props.dishGroup);
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-5">
                 <div class="border-sidebar-border/70 dark:border-sidebar-border col-span-3 overflow-auto rounded-xl border px-8 py-4">
-                    <!-- Filter options -->
-                    <div>
-                        <Input v-model="filter.text" />
-                        <Select v-model="filter.category">
-                            <SelectTrigger class="w-[180px]">
-                                <SelectValue placeholder="Selecteer een categorie" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Categorieën</SelectLabel>
-                                    <SelectItem v-for="(category, index) in allCategories" :key="index" :value="category">
-                                        {{category}}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                    <div class="flex pb-4 gap-2">
+                        <div class="grid grid-cols-2 grow gap-2">
+                            <Input v-model="filter.text" placeholder="zoeken op naam of id..." />
+                            <Select v-model="filter.category">
+                                <SelectTrigger class="w-full">
+                                    <SelectValue placeholder="Selecteer een categorie" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Categorieën</SelectLabel>
+                                        <SelectItem v-for="(category, index) in allCategories" :key="index" :value="category">
+                                            {{ category }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <Button>reset filters</Button>
                     </div>
                     <!-- Dish list -->
-                    <div v-for="[category, dishes] in Object.entries(dishGroup)" :key="category" class="pb-12">
+                    <div v-for="[category, dishes] in Object.entries(filteredDishes)" :key="category" class="pb-12">
                         <h2 class="pb-2 !font-bold">{{ category }}</h2>
                         <div v-for="dish in dishes" :key="dish.id" class="flex items-center">
                             <p class="text-muted-foreground basis-[5ch] font-mono">{{ dish.menu_number }}.</p>
