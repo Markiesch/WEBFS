@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\SalesSummaryController;
 use App\Http\Controllers\CashRegister\DashboardController;
 use App\Http\Controllers\CashRegister\SalesController;
 use App\Http\Controllers\Restaurant\VisitorsController;
@@ -29,6 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('dishes', [MenuController::class, 'store'])->name('dishes.store');
         Route::patch('dishes/{id}', [MenuController::class, 'update'])->name('dishes.update');
         Route::delete('dishes/{id}', [MenuController::class, 'destroy'])->name('dishes.destroy');
+
+        // Sales summaries
+        Route::get('sales-summaries', [SalesSummaryController::class, 'index'])->name('sales_summaries.index');
+        Route::get('sales-summaries/download/{filename}', [SalesSummaryController::class, 'download'])->where('filename', '.*')->name('sales_summaries.download');
     });
 
     Route::prefix('restaurant')->name('restaurant.')->group(function () {
