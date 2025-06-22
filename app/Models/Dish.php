@@ -21,4 +21,9 @@ class Dish extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    // make sure is_side_dish is a boolean
+    protected $casts = [
+        'is_side_dish' => 'boolean',
+    ];
 }

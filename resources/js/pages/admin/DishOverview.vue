@@ -18,6 +18,7 @@ import {
     PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,12 +29,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const dishes = ref((usePage().props.dishes as any[]) || []);
 const pagination = ref((usePage().props.pagination as any) || {});
+const categories = ref((usePage().props.categories as any[]) || []);
 // Keep dishes and pagination in sync with Inertia page props
 watch(
     () => usePage().props,
     (props) => {
         dishes.value = props.dishes || [];
         pagination.value = props.pagination || {};
+        categories.value = props.categories || [];
     }
 );
 
@@ -48,6 +51,10 @@ const form = ref({
 });
 const dialogOpen = ref(false);
 const isEdit = ref(false);
+
+// For delete dialog
+const deleteDialogOpen = ref(false);
+const dishToDelete = ref<any>(null);
 
 function openCreateDialog() {
     isEdit.value = false;
@@ -71,6 +78,7 @@ function openEditDialog(dish: any) {
 
 function submitForm() {
     if (isEdit.value && form.value.id) {
+        console.log(form.value);
         router.patch(`/admin/dishes/${form.value.id}`, form.value, {
             preserveState: true,
             only: ['dishes', 'pagination'],
@@ -89,11 +97,20 @@ function submitForm() {
     }
 }
 
-function deleteDish(id: number) {
-    if (confirm('Verwijder dit gerecht?')) {
-        router.delete(`/admin/dishes/${id}`, {
+function openDeleteDialog(dish: any) {
+    dishToDelete.value = dish;
+    deleteDialogOpen.value = true;
+}
+
+function confirmDeleteDish() {
+    if (dishToDelete.value) {
+        router.delete(`/admin/dishes/${dishToDelete.value.id}`, {
             preserveState: true,
             only: ['dishes', 'pagination'],
+            onSuccess: () => {
+                deleteDialogOpen.value = false;
+                dishToDelete.value = null;
+            },
         });
     }
 }
@@ -138,11 +155,11 @@ function gotoPage(page: number) {
                         <TableCell>€ {{ dish.price }}</TableCell>
                         <TableCell>{{ dish.category?.name ?? dish.category_id }}</TableCell>
                         <TableCell>
-                            <Checkbox :checked="dish.is_side_dish" disabled />
+                            {{dish.is_side_dish ? 'Ja' : 'Nee'}}
                         </TableCell>
                         <TableCell>
                             <Button size="sm" variant="outline" @click="openEditDialog(dish)">Bewerken</Button>
-                            <Button size="sm" variant="destructive" class="ml-2" @click="deleteDish(dish.id)"> Verwijderen </Button>
+                            <Button size="sm" variant="destructive" class="ml-2" @click="openDeleteDialog(dish)">Verwijderen</Button>
                         </TableCell>
                     </TableRow>
                 </TableBody>
@@ -175,10 +192,23 @@ function gotoPage(page: number) {
                         <Input v-model="form.menu_number" placeholder="Menu nummer" required />
                         <Input v-model="form.name" placeholder="Naam" required />
                         <Input v-model="form.price" placeholder="Prijs" type="number" step="0.01" required />
-                        <Input v-model="form.category_id" placeholder="Categorie ID" required />
+                        <Select v-model="form.category_id" required>
+                            <SelectTrigger class="w-full">
+                                <SelectValue placeholder="Categorie" class="w-full" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem
+                                    v-for="cat in categories"
+                                    :key="cat.id"
+                                    :value="String(cat.id)"
+                                >
+                                    {{ cat.name }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
                         <Input v-model="form.description" placeholder="Beschrijving" />
                         <div class="flex items-center gap-2">
-                            <Checkbox v-model:checked="form.is_side_dish" />
+                            <Checkbox v-model="form.is_side_dish" />
                             <span>Bijgerecht</span>
                         </div>
                         <DialogFooter>
@@ -188,6 +218,25 @@ function gotoPage(page: number) {
                             </DialogClose>
                         </DialogFooter>
                     </form>
+                </DialogContent>
+            </Dialog>
+            <!-- Delete confirmation dialog -->
+            <Dialog v-model:open="deleteDialogOpen">
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Weet je zeker dat je dit gerecht wilt verwijderen?</DialogTitle>
+                    </DialogHeader>
+                    <div class="py-4">
+                        <div v-if="dishToDelete">
+                            <strong>{{ dishToDelete.menu_number }} - {{ dishToDelete.name }}</strong>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="destructive" @click="confirmDeleteDish">Verwijderen</Button>
+                        <DialogClose as-child>
+                            <Button type="button" variant="outline" @click="deleteDialogOpen = false">Annuleren</Button>
+                        </DialogClose>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </div>

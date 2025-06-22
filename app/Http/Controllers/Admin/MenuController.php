@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dish;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,6 +15,7 @@ class MenuController extends Controller
     public function index(Request $request): Response
     {
         $dishes = Dish::with('category')->paginate(15);
+        $categories = Category::all();
 
         return Inertia::render('admin/DishOverview', [
             'dishes' => $dishes->items(),
@@ -26,6 +28,7 @@ class MenuController extends Controller
                 'to' => $dishes->lastItem(),
                 'links' => $dishes->linkCollection(),
             ],
+            'categories' => $categories,
         ]);
     }
 
