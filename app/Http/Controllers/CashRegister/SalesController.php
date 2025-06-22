@@ -23,6 +23,7 @@ class SalesController extends Controller
             'dishes.*.dish_id' => 'required|integer|exists:dishes,id',
             'dishes.*.quantity' => 'required|integer|min:1',
             'dishes.*.price' => 'required|numeric|min:0',
+            'dishes.*.note' => 'nullable|string|max:255',
         ]);
 
         $orderData = [
@@ -31,11 +32,11 @@ class SalesController extends Controller
         $order = auth()->user()->orders()->create($orderData);
 
         $orderItems = collect($request->input('dishes'))->map(function ($item) {
-            Log::info('price' . $item['price']);
             return [
                 'dish_id' => $item['dish_id'],
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
+                'note' => $item['note'] ?? null,
             ];
         })->toArray();
         $order->orderItems()->createMany($orderItems);

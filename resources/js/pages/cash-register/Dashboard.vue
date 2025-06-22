@@ -42,8 +42,10 @@ const addDishToSelection = (dish: Dish) => {
     if (existingSelection) {
         existingSelection.quantity = Math.min(existingSelection.quantity + 1, maxDishQuantity);
     } else {
+        console.log(note.value)
         selectedDishes.value.push({ dish, quantity: 1, note: note.value });
     }
+    note.value = '';
 };
 
 const filter = ref({
@@ -108,8 +110,9 @@ const submit = () => {
         {
             dishes: selectedDishes.value.map((item) => ({
                 dish_id: item.dish.id,
-                quantity: item.quantity,
                 price: item.dish.price,
+                quantity: item.quantity,
+                note: item.note,
             })),
         },
         {
@@ -120,6 +123,11 @@ const submit = () => {
         },
     );
     clearSelection();
+};
+
+const resetFilters = () => {
+    filter.value.text = '';
+    filter.value.category = '';
 };
 </script>
 
@@ -147,7 +155,7 @@ const submit = () => {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button>reset filters</Button>
+                        <Button @click="resetFilters">reset filters</Button>
                     </div>
                     <!-- Dish list -->
                     <div v-for="[category, dishes] in Object.entries(filteredDishes)" :key="category" class="pb-12">
@@ -163,7 +171,7 @@ const submit = () => {
                                 </DialogTrigger>
                                 <DialogContent class="sm:max-w-[425px]">
                                     <DialogHeader>
-                                        <DialogTitle>Gerecht toegevoegd</DialogTitle>
+                                        <DialogTitle>Gerecht toegevoegen</DialogTitle>
                                         <DialogDescription class="text-muted-foreground mt-2">
                                             <span class="font-bold">Menu nummer:</span> {{ dish.menu_number }}<br />
                                             <span class="font-bold">Naam:</span> {{ dish.name }}<br />
@@ -174,9 +182,15 @@ const submit = () => {
 
                                         <DialogDescription class="mt-2" v-if="commonNotes.length">
                                             <p class="text-muted-foreground">Veelgebruikte notities:</p>
-                                            <ul class="list-disc pl-4" v-for="(item, index) in commonNotes" :key="index">
-                                                <Button :variant="note === item ? 'default' : 'secondary'" @click="note = item">{{item}}</Button>
-                                            </ul>
+                                            <div class="flex gap-2" >
+                                                <Button
+                                                    v-for="(item, index) in commonNotes"
+                                                    :key="index"
+                                                    :variant="note === item ? 'default' : 'secondary'"
+                                                    @click="note = item">
+                                                    {{item}}
+                                                </Button>
+                                            </div>
                                         </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>

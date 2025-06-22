@@ -23,10 +23,6 @@ class DashboardController extends Controller
                 ->get()
                 ->map(function ($item) {
                     return $item->note;
-//                    return [
-//                        'note' => $item->note,
-//                        'count' => $item->count,
-//                    ];
                 }),
         ]);
     }
