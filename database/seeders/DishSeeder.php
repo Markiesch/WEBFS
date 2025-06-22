@@ -212,7 +212,20 @@ class DishSeeder extends Seeder
             ['menu_number' => 'D1', 'name' => 'Bami of Nasi Goreng ipv rijst', 'price' => 0.9, 'category_id' => 21, 'description' => NULL],
             ['menu_number' => 'D2', 'name' => 'Mihoen Goreng ipv rijst', 'price' => 2.5, 'category_id' => 21, 'description' => NULL],
             ['menu_number' => 'D3', 'name' => 'Chinese Bami ipv rijst', 'price' => 2.5, 'category_id' => 21, 'description' => NULL],
+            ['menu_number' => 'SIDE_1', 'name' => 'Witte rijst', 'price' => 0, 'category_id' => 21, 'description' => NULL, 'is_side_dish' => True],
+            ['menu_number' => 'SIDE_2', 'name' => 'Nasi goreng', 'price' => 0.9, 'category_id' => 21, 'description' => NULL, 'is_side_dish' => True],
+            ['menu_number' => 'SIDE_3', 'name' => 'Bami goreng', 'price' => 0.9, 'category_id' => 21, 'description' => NULL, 'is_side_dish' => True],
+            ['menu_number' => 'SIDE_4', 'name' => 'Mihoen goreng', 'price' => 2.5, 'category_id' => 21, 'description' => NULL, 'is_side_dish' => True],
+            ['menu_number' => 'SIDE_5', 'name' => 'Chinese bami', 'price' => 2.5, 'category_id' => 21, 'description' => NULL, 'is_side_dish' => True],
+
         ];
+
+        foreach ($dishes as &$dish) {
+            if (!isset($dish['is_side_dish'])) {
+                $dish['is_side_dish'] = false;
+            }
+        }
+        unset($dish);
 
         Dish::insert($dishes);
     }

@@ -10,22 +10,22 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('table', function (Blueprint $table) {
+        Schema::create('tables', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
 
-        Schema::create('table_guest', function (Blueprint $table) {
+        Schema::create('table_guests', function (Blueprint $table) {
             $table->id();
             $table->date('birthdate');
             $table->boolean('has_deluxe_menu');
             $table->timestamps();
         });
 
-        Schema::create('table_occupation', function (Blueprint $table) {
+        Schema::create('table_occupations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('table_id')->constrained('table')->onDelete('cascade');
-            $table->foreignId('guest_id')->constrained('table_guest')->onDelete('cascade');
+            $table->foreignId('table_id')->constrained('tables')->onDelete('cascade');
+            $table->foreignId('guest_id')->constrained('table_guests')->onDelete('cascade');
             $table->dateTime('datetime');
             $table->timestamps();
         });
@@ -36,8 +36,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('table');
-        Schema::dropIfExists('table_occupation');
-        Schema::dropIfExists('table_guest');
+        Schema::dropIfExists('tables');
+        Schema::dropIfExists('table_occupations');
+        Schema::dropIfExists('table_guests');
     }
 };

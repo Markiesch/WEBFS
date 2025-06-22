@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
             DishSeeder::class,
             UserSeeder::class,
             NewsPostSeeder::class,
+            TablesSeeder::class,
+            OrderTestSeeder::class, // Voeg Order en OrderItem seeding toe
         ]);
     }
 }

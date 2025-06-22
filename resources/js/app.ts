@@ -2,7 +2,6 @@ import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { Marquee } from '@selemondev/vue3-marquee';
-import '@selemondev/vue3-marquee/dist/style.css';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';

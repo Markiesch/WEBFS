@@ -14,11 +14,17 @@ class Dish extends Model
         'price',
         'menu_number',
         'description',
-        'image',
+        'category_id',
+        'is_side_dish'
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
+    // make sure is_side_dish is a boolean
+    protected $casts = [
+        'is_side_dish' => 'boolean',
+    ];
 }
