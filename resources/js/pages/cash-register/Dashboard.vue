@@ -25,22 +25,24 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps<{ dishGroup: Record<string, Dish[]> }>();
+const props = defineProps<{ dishGroup: Record<string, Dish[]>, commonNotes: string[] }>();
 
 type Selection = {
     dish: Dish;
+    note: string;
     quantity: number;
 };
 
 const maxDishQuantity = 99;
-
+const note = ref('');
 const selectedDishes = ref<Selection[]>([]);
+
 const addDishToSelection = (dish: Dish) => {
     const existingSelection = selectedDishes.value.find((selection) => selection.dish.id === dish.id);
     if (existingSelection) {
         existingSelection.quantity = Math.min(existingSelection.quantity + 1, maxDishQuantity);
     } else {
-        selectedDishes.value.push({ dish, quantity: 1 });
+        selectedDishes.value.push({ dish, quantity: 1, note: note.value });
     }
 };
 
@@ -155,7 +157,35 @@ const submit = () => {
                             <p v-html="dish.name" class="grow font-mono"></p>
                             <code class="pr-4 font-mono">{{ formatPrice(dish.price) }}</code>
 
-                            <Button size="sm" variant="ghost" @click="addDishToSelection(dish)" class="ml-2"> toevoegen </Button>
+                            <Dialog>
+                                <DialogTrigger as-child>
+                                    <Button size="sm" variant="ghost"  class="ml-2">toevoegen</Button>
+                                </DialogTrigger>
+                                <DialogContent class="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                        <DialogTitle>Gerecht toegevoegd</DialogTitle>
+                                        <DialogDescription class="text-muted-foreground mt-2">
+                                            <span class="font-bold">Menu nummer:</span> {{ dish.menu_number }}<br />
+                                            <span class="font-bold">Naam:</span> {{ dish.name }}<br />
+                                            <span class="font-bold">Prijs:</span> {{ formatPrice(dish.price) }}
+                                        </DialogDescription>
+                                        <DialogDescription>Optioneel: voeg een notitie toe</DialogDescription>
+                                        <Input v-model="note" />
+
+                                        <DialogDescription class="mt-2" v-if="commonNotes.length">
+                                            <p class="text-muted-foreground">Veelgebruikte notities:</p>
+                                            <ul class="list-disc pl-4" v-for="(item, index) in commonNotes" :key="index">
+                                                <Button :variant="note === item ? 'default' : 'secondary'" @click="note = item">{{item}}</Button>
+                                            </ul>
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <DialogClose>
+                                            <Button type="button" variant="secondary" @click="addDishToSelection(dish)">toevoegen</Button>
+                                        </DialogClose>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
                         </div>
                     </div>
                 </div>
