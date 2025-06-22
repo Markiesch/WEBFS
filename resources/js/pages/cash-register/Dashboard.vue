@@ -38,11 +38,13 @@ const note = ref('');
 const selectedDishes = ref<Selection[]>([]);
 
 const addDishToSelection = (dish: Dish) => {
-    const existingSelection = selectedDishes.value.find((selection) => selection.dish.id === dish.id);
+    // Find by both dish id and note
+    const existingSelection = selectedDishes.value.find(
+        (selection) => selection.dish.id === dish.id && selection.note === note.value
+    );
     if (existingSelection) {
         existingSelection.quantity = Math.min(existingSelection.quantity + 1, maxDishQuantity);
     } else {
-        console.log(note.value)
         selectedDishes.value.push({ dish, quantity: 1, note: note.value });
     }
     note.value = '';
@@ -53,8 +55,11 @@ const filter = ref({
     category: '',
 });
 
-const subtractDishFromSelection = (dish: Dish) => {
-    const selectionIndex = selectedDishes.value.findIndex((selection) => selection.dish.id === dish.id);
+const subtractDishFromSelection = (dish: Dish, noteValue: string) => {
+    // Find by both dish id and note
+    const selectionIndex = selectedDishes.value.findIndex(
+        (selection) => selection.dish.id === dish.id && selection.note === noteValue
+    );
     if (selectionIndex !== -1) {
         const selection = selectedDishes.value[selectionIndex];
         if (selection.quantity > 1) {
@@ -209,11 +214,12 @@ const resetFilters = () => {
                         <Button :disabled="!selectedDishes.length" @click="clearSelection">verwijderen</Button>
                     </div>
                     <div v-if="selectedDishes.length === 0" class="text-muted-foreground py-2">Geen gerechten geselecteerd.</div>
-                    <div v-for="selection in selectedDishes" :key="selection.dish.id" class="flex items-center">
+                    <div v-for="selection in selectedDishes" :key="selection.dish.id + '-' + selection.note" class="flex items-center">
                         <p class="text-muted-foreground basis-[5ch] font-mono">{{ selection.dish.menu_number }}.</p>
                         <p v-html="selection.dish.name" class="grow font-mono"></p>
+                        <span v-if="selection.note" class="ml-2 italic text-xs text-muted-foreground">({{ selection.note }})</span>
                         <div>
-                            <Button size="sm" variant="ghost" class="ml-4 !px-1" @click="subtractDishFromSelection(selection.dish)">
+                            <Button size="sm" variant="ghost" class="ml-4 !px-1" @click="subtractDishFromSelection(selection.dish, selection.note)">
                                 <MinusIcon />
                             </Button>
                             <span class="text-muted-foreground px-2 font-mono"> x{{ selection.quantity.toString().padStart(2, '0') }} </span>
@@ -222,7 +228,7 @@ const resetFilters = () => {
                                 variant="ghost"
                                 :disabled="selection.quantity >= maxDishQuantity"
                                 class="!px-1"
-                                @click="addDishToSelection(selection.dish)"
+                                @click="selection.quantity++"
                             >
                                 <PlusIcon />
                             </Button>
