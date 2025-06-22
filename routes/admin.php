@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\CashRegister\DashboardController;
 use App\Http\Controllers\CashRegister\SalesController;
+use App\Http\Controllers\Restaurant\VisitorsController;
 use Illuminate\Support\Facades\Route;
 
 
