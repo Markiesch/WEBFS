@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 // ShadCN imports
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const dishes = ref((usePage().props.dishes as any[]) || []);
 const pagination = ref((usePage().props.pagination as any) || {});
+// Keep dishes and pagination in sync with Inertia page props
+watch(
+    () => usePage().props,
+    (props) => {
+        dishes.value = props.dishes || [];
+        pagination.value = props.pagination || {};
+    }
+);
+
 const form = ref({
     id: null,
     name: '',
@@ -63,16 +72,18 @@ function openEditDialog(dish: any) {
 function submitForm() {
     if (isEdit.value && form.value.id) {
         router.patch(`/admin/dishes/${form.value.id}`, form.value, {
+            preserveState: true,
+            only: ['dishes', 'pagination'],
             onSuccess: () => {
                 dialogOpen.value = false;
-                router.reload({ only: ['dishes', 'pagination'] });
             },
         });
     } else {
         router.post('/admin/dishes', form.value, {
+            preserveState: true,
+            only: ['dishes', 'pagination'],
             onSuccess: () => {
                 dialogOpen.value = false;
-                router.reload({ only: ['dishes', 'pagination'] });
             },
         });
     }
@@ -81,7 +92,8 @@ function submitForm() {
 function deleteDish(id: number) {
     if (confirm('Verwijder dit gerecht?')) {
         router.delete(`/admin/dishes/${id}`, {
-            onSuccess: () => router.reload({ only: ['dishes', 'pagination'] }),
+            preserveState: true,
+            only: ['dishes', 'pagination'],
         });
     }
 }
@@ -92,6 +104,8 @@ function gotoPage(page: number) {
         { page },
         {
             preserveScroll: true,
+            preserveState: true,
+            only: ['dishes', 'pagination'],
         },
     );
 }

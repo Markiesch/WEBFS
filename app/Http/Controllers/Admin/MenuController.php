@@ -13,7 +13,7 @@ class MenuController extends Controller
     // List all dishes with pagination
     public function index(Request $request): Response
     {
-        $dishes = Dish::with('category')->orderBy('menu_number')->paginate(15);
+        $dishes = Dish::with('category')->paginate(15);
 
         return Inertia::render('admin/DishOverview', [
             'dishes' => $dishes->items(),
