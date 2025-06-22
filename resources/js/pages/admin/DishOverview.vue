@@ -126,6 +126,8 @@ function gotoPage(page: number) {
         },
     );
 }
+
+const errors = computed(() => usePage().props.errors || {});
 </script>
 
 <template>
@@ -190,8 +192,11 @@ function gotoPage(page: number) {
                     </DialogHeader>
                     <form @submit.prevent="submitForm" class="mt-2 flex flex-col gap-4">
                         <Input v-model="form.menu_number" placeholder="Menu nummer" required />
+                        <span v-if="errors.menu_number" class="text-red-500 text-sm">{{ errors.menu_number }}</span>
                         <Input v-model="form.name" placeholder="Naam" required />
+                        <span v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</span>
                         <Input v-model="form.price" placeholder="Prijs" type="number" step="0.01" required />
+                        <span v-if="errors.price" class="text-red-500 text-sm">{{ errors.price }}</span>
                         <Select v-model="form.category_id" required>
                             <SelectTrigger class="w-full">
                                 <SelectValue placeholder="Categorie" class="w-full" />
@@ -206,7 +211,9 @@ function gotoPage(page: number) {
                                 </SelectItem>
                             </SelectContent>
                         </Select>
+                        <span v-if="errors.category_id" class="text-red-500 text-sm">{{ errors.category_id }}</span>
                         <Input v-model="form.description" placeholder="Beschrijving" />
+                        <span v-if="errors.description" class="text-red-500 text-sm">{{ errors.description }}</span>
                         <div class="flex items-center gap-2">
                             <Checkbox v-model="form.is_side_dish" />
                             <span>Bijgerecht</span>

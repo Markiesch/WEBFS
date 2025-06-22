@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dish;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -52,7 +53,14 @@ class MenuController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_side_dish' => 'boolean',
         ]);
-        $dish = Dish::create($validated);
+        try {
+            $dish = Dish::create($validated);
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') { // Integrity constraint violation
+                return back()->withErrors(['menu_number' => 'Dit menunummer bestaat al.'])->withInput();
+            }
+            throw $e;
+        }
         return redirect()->route('admin.dishes.index')->with('success', 'Dish created.');
     }
 
@@ -68,7 +76,14 @@ class MenuController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_side_dish' => 'boolean',
         ]);
-        $dish->update($validated);
+        try {
+            $dish->update($validated);
+        } catch (QueryException $e) {
+            if ($e->getCode() === '23000') { // Integrity constraint violation
+                return back()->withErrors(['menu_number' => 'Dit menunummer bestaat al.'])->withInput();
+            }
+            throw $e;
+        }
         return redirect()->route('admin.dishes.index')->with('success', 'Dish updated.');
     }
 
