@@ -22,6 +22,7 @@ type SaleRecord = {
     created_at: string;
     dish: Dish;
     side_dish: Dish | null;
+    note: string | null;
     quantity: number;
     subtotal: number;
 };
@@ -93,7 +94,9 @@ function maakOverzicht() {
                         <TableRow>
                             <TableHead>Datum</TableHead>
                             <TableHead>Gerecht</TableHead>
+                            <TableHead>Notitie</TableHead>
                             <TableHead>Prijs</TableHead>
+                            <TableHead>Prijs bijgerecht</TableHead>
                             <TableHead>Aantal</TableHead>
                             <TableHead>Subtotaal</TableHead>
                         </TableRow>
@@ -102,7 +105,9 @@ function maakOverzicht() {
                         <TableRow v-for="(record, i) in records" :key="i">
                             <TableCell>{{ formatDate(record.created_at) }}</TableCell>
                             <TableCell>{{ record.dish.name }} <span v-if="record.side_dish" class="text-accent-foreground">(+{{record.side_dish.name}})</span></TableCell>
+                            <TableCell>{{ record.note ?? "-" }}</TableCell>
                             <TableCell>{{ formatPrice(record.dish.price) }}</TableCell>
+                            <TableCell>{{ record.side_dish ? formatPrice(record.side_dish.price) : "-" }}</TableCell>
                             <TableCell>{{ record.quantity }}</TableCell>
                             <TableCell>{{ formatPrice(record.subtotal) }}</TableCell>
                         </TableRow>

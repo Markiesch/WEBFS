@@ -27,7 +27,7 @@ class SalesController extends Controller
                         'price' => $item->price,
                         'note' => $item->note,
                         'created_at' => $item->created_at->format('Y-m-d H:i:s'),
-                        'subtotal' => $item->quantity * $item->price,
+                        'subtotal' => $item->quantity * ($item->price + ($item->sideDish ? $item->sideDish->price : 0)),
                     ];
                 }),
         ]);
