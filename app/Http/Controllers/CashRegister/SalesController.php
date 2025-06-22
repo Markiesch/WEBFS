@@ -12,12 +12,19 @@ use Inertia\Response;
 
 class SalesController extends Controller
 {
-    public function show(): Response
+    public function show(Request $request): Response
     {
+        $query = OrderItem::with("dish", "sideDish")
+            ->orderBy('created_at', 'desc');
+
+        $startDate = $request->input('start_date') ?? now()->startOfMonth()->toDateString();
+        $endDate = $request->input('end_date') ?? now()->endOfMonth()->toDateString();
+
+        $query->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate);
+
         return Inertia::render('cash-register/SalesOverview', [
-            "records" => OrderItem::with("dish", "sideDish")
-                ->orderBy('created_at', 'desc')
-                ->get()
+            "records" => $query->get()
                 ->map(function ($item) {
                     return [
                         'id' => $item->id,
@@ -30,6 +37,8 @@ class SalesController extends Controller
                         'subtotal' => $item->quantity * ($item->price + ($item->sideDish ? $item->sideDish->price : 0)),
                     ];
                 }),
+            "startDate" => $startDate,
+            "endDate" => $endDate,
         ]);
     }
 

@@ -6,7 +6,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, Dish } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { useFormat } from '@/composables/useFormat';
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const { formatPrice, formatDate } = useFormat();
 
@@ -27,7 +28,11 @@ type SaleRecord = {
     subtotal: number;
 };
 
-const props = defineProps<{ records: SaleRecord[] }>();
+const props = defineProps<{
+    records: SaleRecord[],
+    startDate: string,
+    endDate: string
+}>();
 
 const BTW_PERCENTAGE = 0.09;
 
@@ -43,8 +48,21 @@ const omzetExclBtw = computed(() => {
     return omzet.value - btw.value;
 });
 
-function maakOverzicht() {
+const startDate = ref(props.startDate);
+const endDate = ref(props.endDate);
 
+function maakOverzicht() {
+    router.get(
+        '/kassa/orders',
+        {
+            start_date: startDate.value,
+            end_date: endDate.value,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    );
 }
 </script>
 
@@ -59,11 +77,11 @@ function maakOverzicht() {
                         <div>
                             <div class="flex items-center">
                                 <p class="w-[10rem] font-medium">Begin datum</p>
-                                <Input type="date" class="w-min" />
+                                <Input type="date" class="w-min" v-model="startDate" />
                             </div>
                             <div class="flex items-center">
                                 <p class="w-[10rem] font-medium">Eind datum</p>
-                                <Input type="date" class="w-min" />
+                                <Input type="date" class="w-min" v-model="endDate" />
                             </div>
                         </div>
                         <div class="grow">
