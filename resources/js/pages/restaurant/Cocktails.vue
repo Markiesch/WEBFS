@@ -104,7 +104,6 @@ onMounted(() => {
                     <SelectContent>
                         <SelectGroup>
                             <SelectLabel>Categorieën</SelectLabel>
-                            <SelectItem value="all"> Toon alle cocktails</SelectItem>
                             <SelectItem v-for="(category, index) in categories" :key="index" :value="category.strCategory">
                                 {{ category.strCategory }}
                             </SelectItem>
@@ -143,7 +142,12 @@ onMounted(() => {
                     <img v-if="cocktail.strDrinkThumb" :src="cocktail.strDrinkThumb" alt="" class="w-full rounded-t-md" />
                     <div class="p-4">
                         <h2 class="text-lg font-semibold">{{ cocktail.strDrink }}</h2>
-                        <p class="text-muted-foreground text-sm">{{ cocktail.strCategory }}</p>
+                        <p class="text-muted-foreground text-sm">
+                            <span v-if="cocktail.strCategory">{{ cocktail.strCategory }}</span>
+                            <span v-else-if="filter.category !== 'all'">
+                                {{ filter.category }}
+                            </span>
+                        </p>
                         <p class="mt-2 text-sm">{{ cocktail.strInstructions }}</p>
                     </div>
                 </div>
