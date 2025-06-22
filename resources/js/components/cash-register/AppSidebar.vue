@@ -49,7 +49,7 @@ const mainNavItems: { title: string; items: NavItem[] }[] = [
         items: [
             {
                 title: 'Menukaart beheren',
-                href: '/admin/menu',
+                href: '/admin/dishes',
                 icon: Utensils,
             },
         ],

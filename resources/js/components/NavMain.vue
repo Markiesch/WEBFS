@@ -16,7 +16,7 @@ const page = usePage<SharedData>();
         <h3 class="text-muted-foreground mb-2 text-sm font-semibold" v-if="items.length">{{ title }}</h3>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton as-child :is-active="item.href === page.url" :tooltip="item.title">
+                <SidebarMenuButton as-child :is-active="page.url.startsWith(item.href)" :tooltip="item.title">
                     <Link :href="item.href">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
