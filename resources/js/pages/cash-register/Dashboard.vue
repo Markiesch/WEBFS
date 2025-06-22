@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, Dish } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { MinusIcon, PlusIcon } from 'lucide-vue-next';
 import { computed, defineProps, ref } from 'vue';
 
@@ -85,6 +95,30 @@ const filteredDishes = computed(() => {
         {} as Record<string, Dish[]>,
     );
 });
+
+const clearSelection = () => {
+    selectedDishes.value = [];
+};
+
+const submit = () => {
+    router.post(
+        route('admin.order.create'),
+        {
+            dishes: selectedDishes.value.map((item) => ({
+                dish_id: item.dish.id,
+                quantity: item.quantity,
+                price: item.dish.price,
+            })),
+        },
+        {
+            preserveScroll: true,
+            onError: (errors) => {
+                console.error('Error submitting selection:', errors);
+            },
+        },
+    );
+    clearSelection();
+};
 </script>
 
 <template>
@@ -94,8 +128,8 @@ const filteredDishes = computed(() => {
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-5">
                 <div class="border-sidebar-border/70 dark:border-sidebar-border col-span-3 overflow-auto rounded-xl border px-8 py-4">
-                    <div class="flex pb-4 gap-2">
-                        <div class="grid grid-cols-2 grow gap-2">
+                    <div class="flex gap-2 pb-4">
+                        <div class="grid grow grid-cols-2 gap-2">
                             <Input v-model="filter.text" placeholder="zoeken op naam of id..." />
                             <Select v-model="filter.category">
                                 <SelectTrigger class="w-full">
@@ -121,15 +155,16 @@ const filteredDishes = computed(() => {
                             <p v-html="dish.name" class="grow font-mono"></p>
                             <code class="pr-4 font-mono">{{ formatPrice(dish.price) }}</code>
 
-                            <Button size="icon" variant="ghost" @click="addDishToSelection(dish)" class="ml-2">
-                                <PlusIcon />
-                            </Button>
+                            <Button size="sm" variant="ghost" @click="addDishToSelection(dish)" class="ml-2"> toevoegen </Button>
                         </div>
                     </div>
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border col-span-2 overflow-auto rounded-xl border p-4">
-                    <h2 class="pb-2 !font-bold">Selected Dishes</h2>
-                    <div v-if="selectedDishes.length === 0" class="text-muted-foreground">No dishes selected.</div>
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <h2 class="!font-bold">Selected Dishes</h2>
+                        <Button :disabled="!selectedDishes.length" @click="clearSelection">verwijderen</Button>
+                    </div>
+                    <div v-if="selectedDishes.length === 0" class="text-muted-foreground py-2">Geen gerechten geselecteerd.</div>
                     <div v-for="selection in selectedDishes" :key="selection.dish.id" class="flex items-center">
                         <p class="text-muted-foreground basis-[5ch] font-mono">{{ selection.dish.menu_number }}.</p>
                         <p v-html="selection.dish.name" class="grow font-mono"></p>
@@ -160,6 +195,23 @@ const filteredDishes = computed(() => {
                             <code class="font-mono">{{ formatPrice(totalPrice) }}</code>
                         </div>
                     </div>
+
+                    <Dialog>
+                        <DialogTrigger as-child>
+                            <Button :disabled="!selectedDishes.length" @click="submit">afrekenen</Button>
+                        </DialogTrigger>
+                        <DialogContent class="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Gelukt!</DialogTitle>
+                                <DialogDescription> De bestelling is succesvol geplaatst.</DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <DialogClose>
+                                    <Button type="button" variant="secondary">OK</Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
         </div>

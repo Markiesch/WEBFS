@@ -14,11 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('table_occupation_id')->constrained('table_occupations')->onDelete('cascade');
+            $table->foreignId('table_occupation_id')->nullable()->constrained('table_occupations')->onDelete('cascade');
         });
 
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('dish_id')->constrained('dishes')->onDelete('cascade');
             $table->foreignId('side_dish_id')->nullable()->constrained('dishes')->onDelete('cascade');
