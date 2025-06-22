@@ -22,6 +22,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //        Route::get('menu/:id', [MenuController::class, 'edit'])->name('menu.edit');
         Route::patch('menu/:id', [MenuController::class, 'update'])->name('menu.update');
         Route::delete('menu/:id', [MenuController::class, 'destroy'])->name('menu.destroy');
+
+        // Dish CRUD
+        Route::get('dishes', [MenuController::class, 'index'])->name('dishes.index');
+        Route::get('dishes/{id}', [MenuController::class, 'show'])->name('dishes.show');
+        Route::post('dishes', [MenuController::class, 'store'])->name('dishes.store');
+        Route::patch('dishes/{id}', [MenuController::class, 'update'])->name('dishes.update');
+        Route::delete('dishes/{id}', [MenuController::class, 'destroy'])->name('dishes.destroy');
     });
 
     Route::prefix('restaurant')->name('restaurant.')->group(function () {
@@ -29,4 +36,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/visitors/save', [VisitorsController::class, 'save'])->name('visitors.save');
     });
 });
-
