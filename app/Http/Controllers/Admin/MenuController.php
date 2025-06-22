@@ -10,12 +10,22 @@ use Inertia\Response;
 
 class MenuController extends Controller
 {
-    // List all dishes
+    // List all dishes with pagination
     public function index(Request $request): Response
     {
-        $dishes = Dish::with('category')->get();
+        $dishes = Dish::with('category')->orderBy('menu_number')->paginate(15);
+
         return Inertia::render('admin/DishOverview', [
-            'dishes' => $dishes,
+            'dishes' => $dishes->items(),
+            'pagination' => [
+                'current_page' => $dishes->currentPage(),
+                'last_page' => $dishes->lastPage(),
+                'per_page' => $dishes->perPage(),
+                'total' => $dishes->total(),
+                'from' => $dishes->firstItem(),
+                'to' => $dishes->lastItem(),
+                'links' => $dishes->linkCollection(),
+            ],
         ]);
     }
 
