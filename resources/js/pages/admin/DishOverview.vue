@@ -200,7 +200,7 @@ function gotoPage(page: number) {
                                 <SelectItem
                                     v-for="cat in categories"
                                     :key="cat.id"
-                                    :value="String(cat.id)"
+                                    :value="cat.id"
                                 >
                                     {{ cat.name }}
                                 </SelectItem>
