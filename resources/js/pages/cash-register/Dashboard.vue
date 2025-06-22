@@ -204,7 +204,7 @@ const resetFilters = () => {
 
                                         <DialogDescription class="mt-2" v-if="commonNotes.length">
                                             <p class="text-muted-foreground">Veelgebruikte notities:</p>
-                                            <div class="flex gap-2">
+                                            <div class="flex gap-2 flex-wrap">
                                                 <Button
                                                     v-for="(item, index) in commonNotes"
                                                     :key="index"
