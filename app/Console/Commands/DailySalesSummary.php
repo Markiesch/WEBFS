@@ -16,7 +16,7 @@ class DailySalesSummary extends Command
      *
      * @var string
      */
-    protected $signature = 'app:daily-sales-summary';
+    protected $signature = 'app:daily-sales-summary {date?}';
 
     /**
      * The console command description.
@@ -30,9 +30,9 @@ class DailySalesSummary extends Command
      */
     public function handle()
     {
-        $today = Carbon::today();
+        $date = $this->argument('date') ? Carbon::parse($this->argument('date')) : Carbon::today();
         $orders = Order::with(['orderItems.dish', 'user'])
-            ->whereDate('created_at', $today)
+            ->whereDate('created_at', $date)
             ->get();
 
         $spreadsheet = new Spreadsheet();
@@ -55,8 +55,7 @@ class DailySalesSummary extends Command
         $sheet->setCellValue('C' . $row, 'Totaal omzet:');
         $sheet->setCellValue('D' . $row, $total);
 
-        // Sla bestand op via de Storage facade zodat het zichtbaar is voor de controller en download route
-        $filename = 'sales_summary_' . $today->format('Y_m_d') . '.xlsx';
+        $filename = 'sales_summary_' . $date->format('Y_m_d') . '.xlsx';
         $storagePath = 'summaries/' . $filename;
         // Zorg dat de map bestaat
         if (!Storage::exists('summaries')) {
