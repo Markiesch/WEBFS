@@ -12,11 +12,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useFormat } from '@/composables/useFormat';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, Dish } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { MinusIcon, PlusIcon, XIcon } from 'lucide-vue-next';
 import { computed, defineProps, ref } from 'vue';
+
+type Selection = {
+    dish: Dish;
+    note: string;
+    quantity: number;
+    sideDish: Dish | null;
+};
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,13 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{ sideDishes: Dish[]; dishGroup: Record<string, Dish[]>; commonNotes: string[] }>();
-
-type Selection = {
-    dish: Dish;
-    note: string;
-    quantity: number;
-    sideDish?: Dish;
-};
+const { formatPrice } = useFormat();
 
 const maxDishQuantity = 99;
 const note = ref('');
@@ -76,14 +78,6 @@ const totalPrice = computed(() => {
         return total + dishPrice * selection.quantity;
     }, 0);
 });
-
-const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR',
-        minimumFractionDigits: 2,
-    }).format(price);
-};
 
 const allCategories = Object.keys(props.dishGroup);
 
@@ -200,10 +194,12 @@ const resetFilters = () => {
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>
-                                            <Button variant="outline" size="icon" @click="selectedSideDish = null"><XIcon /></Button>
+                                            <Button variant="outline" size="icon" @click="selectedSideDish = null">
+                                                <XIcon />
+                                            </Button>
                                         </div>
 
-                                        <DialogDescription class="pt-4">Optioneel: voeg een notitie toe</DialogDescription>
+                                        <DialogDescription class="pt-4">Optioneel: voeg een notitie toe </DialogDescription>
                                         <Input v-model="note" />
 
                                         <DialogDescription class="mt-2" v-if="commonNotes.length">
@@ -239,7 +235,9 @@ const resetFilters = () => {
                     <div v-for="selection in selectedDishes" :key="selection.dish.id + '-' + selection.note" class="flex items-center">
                         <p class="text-muted-foreground basis-[5ch] font-mono">{{ selection.dish.menu_number }}.</p>
                         <p v-html="selection.dish.name" class="grow font-mono"></p>
-                        <span v-if="selection.sideDish" class="text-muted-foreground text-xs">({{ selection.sideDish.name }} +&euro;{{selection.sideDish.price}})</span>
+                        <span v-if="selection.sideDish" class="text-muted-foreground text-xs"
+                            >({{ selection.sideDish.name }} +&euro;{{ selection.sideDish.price }})</span
+                        >
                         <span v-if="selection.note" class="text-muted-foreground ml-2 text-xs italic">({{ selection.note }})</span>
                         <div>
                             <Button size="sm" variant="ghost" class="ml-4 !px-1" @click="subtractDishFromSelection(selection.dish, selection.note)">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CashRegister;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -13,7 +14,23 @@ class SalesController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('cash-register/SalesOverview');
+        return Inertia::render('cash-register/SalesOverview', [
+            "records" => OrderItem::with("dish", "sideDish")
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'dish' => $item->dish,
+                        'side_dish' => $item->sideDish,
+                        'quantity' => $item->quantity,
+                        'price' => $item->price,
+                        'note' => $item->note,
+                        'created_at' => $item->created_at->format('Y-m-d H:i:s'),
+                        'subtotal' => $item->quantity * $item->price,
+                    ];
+                }),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
