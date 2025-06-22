@@ -13,7 +13,8 @@ class DashboardController extends Controller
     public function show(): Response
     {
         return Inertia::render('cash-register/Dashboard', [
-            'dishGroup' => Dish::with('category')->get()->groupBy('category.name'),
+            'dishGroup' => Dish::where('is_side_dish', False)->with('category')->get()->groupBy('category.name'),
+            'sideDishes' => Dish::where('is_side_dish', True)->get(),
             'commonNotes' => OrderItem::whereNotNull('note')
                 ->select('note')
                 ->groupBy('note')

@@ -12,7 +12,7 @@ class MenuController extends Controller
     public function index(): Response
     {
         return Inertia::render('Menu', [
-            'dishGroup' => Dish::with('category')->get()->groupBy('category.name')
+            'dishGroup' => Dish::where('is_side_dish', False)->with('category')->get()->groupBy('category.name')
         ]);
     }
 }

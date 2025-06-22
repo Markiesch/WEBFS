@@ -24,6 +24,7 @@ class SalesController extends Controller
             'dishes.*.quantity' => 'required|integer|min:1',
             'dishes.*.price' => 'required|numeric|min:0',
             'dishes.*.note' => 'nullable|string|max:255',
+            'dishes.*.side_dish_id' => 'nullable|numeric|exists:dishes,id',
         ]);
 
         $orderData = [
@@ -37,6 +38,7 @@ class SalesController extends Controller
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
                 'note' => $item['note'] ?? null,
+                'side_dish_id' => $item['side_dish_id'] ?? null,
             ];
         })->toArray();
         $order->orderItems()->createMany($orderItems);

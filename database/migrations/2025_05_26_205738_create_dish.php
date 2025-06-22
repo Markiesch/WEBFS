@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->decimal('price');
             $table->string('menu_number')->unique();
             $table->text('description')->nullable();
+            $table->boolean('is_side_dish')->default(false);
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });

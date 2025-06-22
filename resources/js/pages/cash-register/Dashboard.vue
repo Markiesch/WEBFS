@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, Dish } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
-import { MinusIcon, PlusIcon } from 'lucide-vue-next';
+import { MinusIcon, PlusIcon, XIcon } from 'lucide-vue-next';
 import { computed, defineProps, ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,27 +25,29 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps<{ dishGroup: Record<string, Dish[]>, commonNotes: string[] }>();
+const props = defineProps<{ sideDishes: Dish[]; dishGroup: Record<string, Dish[]>; commonNotes: string[] }>();
 
 type Selection = {
     dish: Dish;
     note: string;
     quantity: number;
+    sideDish?: Dish;
 };
 
 const maxDishQuantity = 99;
 const note = ref('');
+const selectedSideDish = ref<Dish | null>(null);
 const selectedDishes = ref<Selection[]>([]);
 
 const addDishToSelection = (dish: Dish) => {
     // Find by both dish id and note
     const existingSelection = selectedDishes.value.find(
-        (selection) => selection.dish.id === dish.id && selection.note === note.value
+        (selection) => selection.dish.id === dish.id && selection.note === note.value && selection.sideDish?.id === selectedSideDish.value?.id,
     );
     if (existingSelection) {
         existingSelection.quantity = Math.min(existingSelection.quantity + 1, maxDishQuantity);
     } else {
-        selectedDishes.value.push({ dish, quantity: 1, note: note.value });
+        selectedDishes.value.push({ dish, quantity: 1, note: note.value, sideDish: selectedSideDish.value });
     }
     note.value = '';
 };
@@ -57,9 +59,7 @@ const filter = ref({
 
 const subtractDishFromSelection = (dish: Dish, noteValue: string) => {
     // Find by both dish id and note
-    const selectionIndex = selectedDishes.value.findIndex(
-        (selection) => selection.dish.id === dish.id && selection.note === noteValue
-    );
+    const selectionIndex = selectedDishes.value.findIndex((selection) => selection.dish.id === dish.id && selection.note === noteValue);
     if (selectionIndex !== -1) {
         const selection = selectedDishes.value[selectionIndex];
         if (selection.quantity > 1) {
@@ -72,7 +72,8 @@ const subtractDishFromSelection = (dish: Dish, noteValue: string) => {
 
 const totalPrice = computed(() => {
     return selectedDishes.value.reduce((total, selection) => {
-        return total + selection.dish.price * selection.quantity;
+        const dishPrice = +selection.dish.price + (selection.sideDish ? +selection.sideDish.price : 0);
+        return total + dishPrice * selection.quantity;
     }, 0);
 });
 
@@ -118,6 +119,7 @@ const submit = () => {
                 price: item.dish.price,
                 quantity: item.quantity,
                 note: item.note,
+                side_dish_id: item.sideDish ? item.sideDish.id : null,
             })),
         },
         {
@@ -172,35 +174,55 @@ const resetFilters = () => {
 
                             <Dialog>
                                 <DialogTrigger as-child>
-                                    <Button size="sm" variant="ghost"  class="ml-2">toevoegen</Button>
+                                    <Button size="sm" variant="ghost" class="ml-2">toevoegen</Button>
                                 </DialogTrigger>
                                 <DialogContent class="sm:max-w-[425px]">
                                     <DialogHeader>
-                                        <DialogTitle>Gerecht toegevoegen</DialogTitle>
+                                        <DialogTitle>Gerecht toevoegen</DialogTitle>
                                         <DialogDescription class="text-muted-foreground mt-2">
                                             <span class="font-bold">Menu nummer:</span> {{ dish.menu_number }}<br />
                                             <span class="font-bold">Naam:</span> {{ dish.name }}<br />
                                             <span class="font-bold">Prijs:</span> {{ formatPrice(dish.price) }}
                                         </DialogDescription>
-                                        <DialogDescription>Optioneel: voeg een notitie toe</DialogDescription>
+
+                                        <DialogDescription class="pt-4">Bijgerecht</DialogDescription>
+                                        <div class="flex gap-2">
+                                            <Select v-model="selectedSideDish">
+                                                <SelectTrigger class="w-full">
+                                                    <SelectValue placeholder="Selecteer een bijgerecht" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectLabel>Bijgerechten</SelectLabel>
+                                                        <SelectItem v-for="(dish, index) in sideDishes" :key="index" :value="dish">
+                                                            {{ dish.name }} +&euro;{{ dish.price }}
+                                                        </SelectItem>
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                            <Button variant="outline" size="icon" @click="selectedSideDish = null"><XIcon /></Button>
+                                        </div>
+
+                                        <DialogDescription class="pt-4">Optioneel: voeg een notitie toe</DialogDescription>
                                         <Input v-model="note" />
 
                                         <DialogDescription class="mt-2" v-if="commonNotes.length">
                                             <p class="text-muted-foreground">Veelgebruikte notities:</p>
-                                            <div class="flex gap-2" >
+                                            <div class="flex gap-2">
                                                 <Button
                                                     v-for="(item, index) in commonNotes"
                                                     :key="index"
                                                     :variant="note === item ? 'default' : 'secondary'"
-                                                    @click="note = item">
-                                                    {{item}}
+                                                    @click="note = item"
+                                                >
+                                                    {{ item }}
                                                 </Button>
                                             </div>
                                         </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>
                                         <DialogClose>
-                                            <Button type="button" variant="secondary" @click="addDishToSelection(dish)">toevoegen</Button>
+                                            <Button type="button" variant="secondary" @click="addDishToSelection(dish)"> toevoegen </Button>
                                         </DialogClose>
                                     </DialogFooter>
                                 </DialogContent>
@@ -217,7 +239,8 @@ const resetFilters = () => {
                     <div v-for="selection in selectedDishes" :key="selection.dish.id + '-' + selection.note" class="flex items-center">
                         <p class="text-muted-foreground basis-[5ch] font-mono">{{ selection.dish.menu_number }}.</p>
                         <p v-html="selection.dish.name" class="grow font-mono"></p>
-                        <span v-if="selection.note" class="ml-2 italic text-xs text-muted-foreground">({{ selection.note }})</span>
+                        <span v-if="selection.sideDish" class="text-muted-foreground text-xs">({{ selection.sideDish.name }} +&euro;{{selection.sideDish.price}})</span>
+                        <span v-if="selection.note" class="text-muted-foreground ml-2 text-xs italic">({{ selection.note }})</span>
                         <div>
                             <Button size="sm" variant="ghost" class="ml-4 !px-1" @click="subtractDishFromSelection(selection.dish, selection.note)">
                                 <MinusIcon />
@@ -234,7 +257,7 @@ const resetFilters = () => {
                             </Button>
                         </div>
                         <div class="ml-4 basis-[6ch] border-l text-right">
-                            <code class="font-mono">{{ formatPrice(selection.dish.price) }}</code>
+                            <code class="font-mono">{{ formatPrice(+(selection.sideDish?.price ?? 0) + +selection.dish.price) }}</code>
                         </div>
                     </div>
                     <hr />

@@ -14,6 +14,7 @@ class Dish extends Model
         'price',
         'menu_number',
         'description',
+        'is_side_dish'
     ];
 
     public function category()
