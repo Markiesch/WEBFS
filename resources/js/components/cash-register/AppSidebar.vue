@@ -4,57 +4,66 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { ConciergeBell, Martini, ReceiptJapaneseYen, Users, Utensils } from 'lucide-vue-next';
 import AppLogo from '../AppLogo.vue';
+import { computed } from 'vue';
 
-const mainNavItems: { title: string; items: NavItem[] }[] = [
-    {
-        title: 'Kassa',
-        items: [
-            {
-                title: 'Dashboard',
-                href: '/kassa/dashboard',
-                icon: ConciergeBell,
-            },
-            {
-                title: 'Verkoop overzicht',
-                href: '/kassa/orders',
-                icon: ReceiptJapaneseYen,
-            },
-        ],
-    },
-    {
-        title: 'Restaurant',
-        items: [
-            {
-                title: 'Bezoekers registreren',
-                href: '/restaurant/visitors',
-                icon: Users,
-            },
-        ],
-    },
-    {
-        title: 'Tablet',
-        items: [
-            {
-                title: 'Cocktails',
-                href: '/tablet/cocktails',
-                icon: Martini,
-            },
-        ],
-    },
-    {
-        title: 'Admin',
-        items: [
-            {
-                title: 'Menukaart beheren',
-                href: '/admin/dishes',
-                icon: Utensils,
-            },
-        ],
-    },
-];
+const page = usePage()
+const user = computed(() => page.props.auth.user)
+
+const mainNavItems = computed(() => {
+    const items = [
+        {
+            title: 'Kassa',
+            items: [
+                {
+                    title: 'Dashboard',
+                    href: '/kassa/dashboard',
+                    icon: ConciergeBell,
+                },
+                {
+                    title: 'Verkoop overzicht',
+                    href: '/kassa/orders',
+                    icon: ReceiptJapaneseYen,
+                },
+            ],
+        },
+        {
+            title: 'Restaurant',
+            items: [
+                {
+                    title: 'Bezoekers registreren',
+                    href: '/restaurant/visitors',
+                    icon: Users,
+                },
+            ],
+        },
+        {
+            title: 'Tablet',
+            items: [
+                {
+                    title: 'Cocktails',
+                    href: '/tablet/cocktails',
+                    icon: Martini,
+                },
+            ],
+        },
+    ];
+    if (user.value && user.value.name.toLowerCase() === 'admin') {
+        items.push({
+            title: 'Admin',
+            items: [
+                {
+                    title: 'Menukaart beheren',
+                    href: '/admin/dishes',
+                    icon: Utensils,
+                },
+            ],
+        });
+    }
+    return items;
+});
 
 const footerNavItems: NavItem[] = [];
 </script>
