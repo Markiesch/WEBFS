@@ -59,8 +59,13 @@ const mainNavItems = computed(() => {
                     href: '/admin/dishes',
                     icon: Utensils,
                 },
+                {
+                    title: 'Verkoop samenvattingen',
+                    href: '/admin/sales-summaries',
+                    icon: ReceiptJapaneseYen,
+                },
             ],
-        });
+        },);
     }
     return items;
 });
