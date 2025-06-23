@@ -2,16 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dish;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
-use App\Models\Dish;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class OrderTestSeeder extends Seeder
 {
@@ -44,7 +42,7 @@ class OrderTestSeeder extends Seeder
                         'dish_id' => $dish->id,
                         'quantity' => rand(1, 3),
                         'price' => $dish->price,
-                        'note' => Str::random(10),
+                        'note' => collect(['Zonder ui', 'Extra pittig', 'Glutenvrij', 'Geen kaas', 'Extra salade', 'Zonder kruiden', 'Zonder knoflook', 'Vega', 'Extra saus', 'Geen pinda\'s'])->random(),
                     ]);
                 }
             }
