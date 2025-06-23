@@ -204,7 +204,7 @@ const resetFilters = () => {
 
                                         <DialogDescription class="mt-2" v-if="commonNotes.length">
                                             <p class="text-muted-foreground">Veelgebruikte notities:</p>
-                                            <div class="flex gap-2 flex-wrap">
+                                            <div class="flex flex-wrap gap-2">
                                                 <Button
                                                     v-for="(item, index) in commonNotes"
                                                     :key="index"
@@ -228,8 +228,8 @@ const resetFilters = () => {
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border col-span-2 overflow-auto rounded-xl border p-4">
                     <div class="flex items-center justify-between border-b pb-4">
-                        <h2 class="!font-bold">Selected Dishes</h2>
-                        <Button :disabled="!selectedDishes.length" @click="clearSelection">verwijderen</Button>
+                        <h2 class="!font-bold">Geselecteerde gerechten</h2>
+                        <Button :disabled="!selectedDishes.length" @click="clearSelection">Verwijderen</Button>
                     </div>
                     <div v-if="selectedDishes.length === 0" class="text-muted-foreground py-2">Geen gerechten geselecteerd.</div>
                     <div v-for="selection in selectedDishes" :key="selection.dish.id + '-' + selection.note" class="flex items-center">
@@ -260,7 +260,7 @@ const resetFilters = () => {
                     </div>
                     <hr />
                     <div class="flex items-center">
-                        <p class="text-muted-foreground grow basis-[5ch] font-mono">TOTAL</p>
+                        <p class="text-muted-foreground grow basis-[5ch] font-mono">TOTAAL</p>
 
                         <div class="ml-4 basis-[6ch] border-l text-right">
                             <code class="font-mono">{{ formatPrice(totalPrice) }}</code>
@@ -269,7 +269,7 @@ const resetFilters = () => {
 
                     <Dialog>
                         <DialogTrigger as-child>
-                            <Button :disabled="!selectedDishes.length" @click="submit">afrekenen</Button>
+                            <Button :disabled="!selectedDishes.length" @click="submit">Afrekenen</Button>
                         </DialogTrigger>
                         <DialogContent class="sm:max-w-[425px]">
                             <DialogHeader>
